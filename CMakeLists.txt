@@ -35,7 +35,14 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(Live-Trail-Conditions-CPP-Uploader Live-Trail-Conditions-CPP-Uploader.c )
+add_executable(Live-Trail-Conditions-CPP-Uploader
+    Live-Trail-Conditions-CPP-Uploader.c
+    modem.c
+    sensors.c
+    power_sleep.c
+    upload_cycle.c
+    utils.c
+)
 
 pico_set_program_name(Live-Trail-Conditions-CPP-Uploader "Live-Trail-Conditions-CPP-Uploader")
 pico_set_program_version(Live-Trail-Conditions-CPP-Uploader "0.1")
@@ -47,7 +54,11 @@ pico_enable_stdio_usb(Live-Trail-Conditions-CPP-Uploader 1)
 # Add the standard library to the build
 target_link_libraries(Live-Trail-Conditions-CPP-Uploader
     pico_stdlib
-    hardware_adc)
+    hardware_adc
+    hardware_uart
+    hardware_rtc      
+    hardware_clocks          
+)
 
 # Add the standard include files to the build
 target_include_directories(Live-Trail-Conditions-CPP-Uploader PRIVATE
