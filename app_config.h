@@ -3,11 +3,12 @@
 
 #include <stdint.h>
 
+#include "app_secrets.h"
+
 // --- User Configuration ---
 #define APP_SIM_PIN "1408"
 #define APP_TRAIL_ID "2"
 #define APP_API_URL "https://live-trail-server.vercel.app/api/data"
-#define APP_API_KEY "a628d17f-fdae-4d1b-9616-51328a75a0a0359fd79a338f4b2c8eed567f8642fbbf"
 
 // --- Pin Definitions (Raspberry Pi Pico / RP2040) ---
 #define MODEM_TX_PIN 1

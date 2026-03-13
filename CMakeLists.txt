@@ -33,6 +33,29 @@ project(Live-Trail-Conditions-CPP-Uploader C CXX ASM)
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
+# Load API key from .env (preferred) or process environment.
+set(APP_API_KEY "")
+set(APP_ENV_FILE "${CMAKE_SOURCE_DIR}/.env")
+
+if(EXISTS "${APP_ENV_FILE}")
+    file(STRINGS "${APP_ENV_FILE}" APP_ENV_API_KEY_LINE REGEX "^API_KEY=")
+    if(APP_ENV_API_KEY_LINE)
+        list(GET APP_ENV_API_KEY_LINE 0 APP_ENV_API_KEY_LINE0)
+        string(REGEX REPLACE "^API_KEY=" "" APP_API_KEY "${APP_ENV_API_KEY_LINE0}")
+    endif()
+endif()
+
+if(APP_API_KEY STREQUAL "" AND DEFINED ENV{API_KEY})
+    set(APP_API_KEY "$ENV{API_KEY}")
+endif()
+
+if(APP_API_KEY STREQUAL "")
+    message(FATAL_ERROR "API key missing. Set API_KEY in .env or environment.")
+endif()
+
+string(REPLACE "\"" "\\\"" APP_API_KEY_ESCAPED "${APP_API_KEY}")
+configure_file(${CMAKE_SOURCE_DIR}/app_secrets.h.in ${CMAKE_BINARY_DIR}/generated/app_secrets.h @ONLY)
+
 # Add executable. Default name is the project name, version 0.1
 
 add_executable(Live-Trail-Conditions-CPP-Uploader
@@ -63,6 +86,7 @@ target_link_libraries(Live-Trail-Conditions-CPP-Uploader
 # Add the standard include files to the build
 target_include_directories(Live-Trail-Conditions-CPP-Uploader PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}
+    ${CMAKE_BINARY_DIR}/generated
 )
 
 pico_add_extra_outputs(Live-Trail-Conditions-CPP-Uploader)
